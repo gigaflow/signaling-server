@@ -10,7 +10,7 @@ import * as UAParser from 'ua-parser-js';
 io.on('connection', (socket) => {
     console.log('New device connected');
     if (socket.handshake.headers.host != null) {
-        const publicIp = socket.handshake.headers.host.split(":")[0];
+        const publicIp = socket.handshake.address;
         console.log('publicIp', publicIp);
 
         const userAgent = new UAParser(socket.request.headers['user-agent']).getOS();
