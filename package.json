@@ -1,0 +1,31 @@
+{
+  "name": "gigaflow-signaling-service",
+  "version": "1.0.0",
+  "description": "A signaling server for WebRTC metadata communication",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc && node dist/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gigaflow/signaling-server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gigaflow/signaling-server/issues"
+  },
+  "homepage": "https://github.com/gigaflow/signaling-server#readme",
+  "dependencies": {
+    "@types/socket.io": "^3.0.2",
+    "@types/socket.io-client": "^3.0.0",
+    "cors": "^2.8.5",
+    "socket.io": "^4.6.1",
+    "typescript": "^5.0.4",
+    "ua-parser-js": "^1.0.35"
+  },
+  "devDependencies": {
+    "@types/ua-parser-js": "^0.7.36"
+  }
+}
