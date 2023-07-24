@@ -19,6 +19,9 @@ class PeersManager {
     }
 
     getPeersByPublicIp(publicIp: string) {
+        if (!this.peersLocalNetworkGroups[publicIp]) {
+            return [];
+        }
         return this.peersLocalNetworkGroups[publicIp];
     }
 

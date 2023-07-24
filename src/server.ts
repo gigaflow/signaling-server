@@ -10,21 +10,21 @@ import * as UAParser from 'ua-parser-js';
 io.on('connection', (socket) => {
     console.log('New device connected');
     if (socket.handshake.headers.host != null) {
-        const publicIp = socket.handshake.address;
+        let publicIp = socket.handshake.address;
+        if (publicIp === '::1') {
+            publicIp = 'localhost';
+        }
         console.log('publicIp', publicIp);
-
-        const userAgent = new UAParser(socket.request.headers['user-agent']).getOS();
-        console.log('userAgent', userAgent);
-
+        socket['_os'] = new UAParser(socket.request.headers['user-agent']).getOS();
         PeersManager.addPeer(publicIp, socket);
 
         const peers = PeersManager.getPeersByPublicIp(publicIp).filter((p: any) => p.socketId !== socket.id);
         console.log('peers', peers);
-        socket.emit('connected-devices-list', {devices: peers});
+        socket.emit('connected-devices-list', {devices: peers.map(p => ({socketId: p.socketId, os: PeersManager.getPeerBySocketId(p.socketId)['_os']}))});
         if (peers.length > 0) {
             for (const peer of peers) {
                 const s: any = PeersManager.getPeerBySocketId(peer.socketId);
-                s.emit('new-device-connected', {socketId: socket.id});
+                s.emit('new-device-connected', {socketId: socket.id, os: socket['_os']});
             }
         }
 
