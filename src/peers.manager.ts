@@ -1,24 +1,30 @@
+import {Peer} from "./peer";
+
 class PeersManager {
     private peersLocalNetworkGroups: any = {};
-    private sockets: any = {};
+    private peers: {[key: string]: Peer | undefined} = {};
 
-    public addPeer(publicIp: string, peer: any) {
+    public addPeer(peer: Peer) {
+        const publicIp = peer.getPublicIPAddress();
+
         if (!this.peersLocalNetworkGroups[publicIp]) {
             this.peersLocalNetworkGroups[publicIp] = [];
         }
-        this.peersLocalNetworkGroups[publicIp].push({socketId: peer.id});
-        this.sockets[peer.id] = peer;
+        this.peersLocalNetworkGroups[publicIp].push({socketId: peer.getID()});
+        this.peers[peer.getID()] = peer;
     }
 
-    public removePeer(publicIp: string, peer: any) {
+    public removePeer(peer: Peer) {
+        const publicIp = peer.getPublicIPAddress();
+
         if (!this.peersLocalNetworkGroups[publicIp]) {
             return;
         }
-        this.peersLocalNetworkGroups[publicIp] = this.peersLocalNetworkGroups[publicIp].filter((p: any) => p.socketId !== peer.id);
-        this.sockets[peer.id] = undefined;
+        this.peersLocalNetworkGroups[publicIp] = this.peersLocalNetworkGroups[publicIp].filter((p: any) => p.socketId !== peer.getID());
+        this.peers[peer.getID()] = undefined;
     }
 
-    getPeersByPublicIp(publicIp: string) {
+    getPeersByPublicIp(publicIp: string): Peer[] {
         if (!this.peersLocalNetworkGroups[publicIp]) {
             return [];
         }
@@ -26,7 +32,7 @@ class PeersManager {
     }
 
     getPeerBySocketId(id: string) {
-        return this.sockets[id];
+        return this.peers[id];
     }
 
 }
